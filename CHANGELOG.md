@@ -6,6 +6,15 @@ Registro das alterações relevantes do **NutriAmor-Web**. Versões alinhadas a 
 
 - (Itens em andamento antes de fechar uma versão.)
 
+## [1.2.1] — 2026-05-04
+
+### Alterado
+- **`verbose_name`** nos modelos de `produtos` (formulários com **Razão social**, **UF**, **Estoque mínimo**, etc.) — migração `0002_verbose_name_pt_br`.
+- README: aviso para **`docker compose ... --build`** após `git pull` na VPS (templates dentro da imagem Docker).
+
+### Corrigido
+- Botões **Salvar** / **Registrar** já no template; em deploy antigo sem rebuild pode aparecer texto antigo — rebuild obrigatório.
+
 ## [1.2.0] — 2026-05-04
 
 ### Alterado

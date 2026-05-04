@@ -60,7 +60,11 @@ docker compose --profile full run --rm web python manage.py ensure_admin --email
 
 Só o banco de dados (Django fora do Docker): `docker compose up -d db`.
 
-Após **`git pull`** na VPS, reconstruir a imagem: `docker compose --profile full up -d --build`.
+Após **`git pull`** na VPS, **sempre** reconstruir a imagem para atualizar templates e código dentro do container:
+
+`docker compose --profile full up -d --build`
+
+Sem o `--build`, alterações em HTML (ex.: texto **Salvar** no botão) podem não aparecer — o browser pode ainda mostrar versão antiga em cache; use atualização forçada (**Ctrl+Shift+R**) ou aba anônima.
 
 ---
 

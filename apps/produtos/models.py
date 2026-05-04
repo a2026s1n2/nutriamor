@@ -2,9 +2,9 @@ from django.db import models
 
 
 class Categoria(models.Model):
-    nome = models.CharField(max_length=120)
-    descricao = models.TextField(blank=True)
-    ativo = models.BooleanField(default=True)
+    nome = models.CharField("Nome", max_length=120)
+    descricao = models.TextField("Descrição", blank=True)
+    ativo = models.BooleanField("Ativo", default=True)
 
     class Meta:
         db_table = "categorias"
@@ -15,7 +15,7 @@ class Categoria(models.Model):
 
 
 class TipoFornecedor(models.Model):
-    nome = models.CharField(max_length=120)
+    nome = models.CharField("Nome", max_length=120)
 
     class Meta:
         db_table = "tipos_fornecedor"
@@ -28,19 +28,25 @@ class TipoFornecedor(models.Model):
 class Fornecedor(models.Model):
     tipo_fornecedor = models.ForeignKey(
         TipoFornecedor,
+        verbose_name="Tipo de fornecedor",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="fornecedores",
     )
-    razao_social = models.CharField(max_length=200)
-    nome_fantasia = models.CharField(max_length=200, blank=True)
-    documento = models.CharField(max_length=20, blank=True, help_text="CNPJ / CPF / outro")
-    telefone = models.CharField(max_length=32, blank=True)
-    email = models.EmailField(blank=True)
-    cidade = models.CharField(max_length=120, blank=True)
-    uf = models.CharField(max_length=2, blank=True)
-    ativo = models.BooleanField(default=True)
+    razao_social = models.CharField("Razão social", max_length=200)
+    nome_fantasia = models.CharField("Nome fantasia", max_length=200, blank=True)
+    documento = models.CharField(
+        "Documento",
+        max_length=20,
+        blank=True,
+        help_text="CNPJ / CPF / outro",
+    )
+    telefone = models.CharField("Telefone", max_length=32, blank=True)
+    email = models.EmailField("E-mail", blank=True)
+    cidade = models.CharField("Cidade", max_length=120, blank=True)
+    uf = models.CharField("UF", max_length=2, blank=True)
+    ativo = models.BooleanField("Ativo", default=True)
 
     class Meta:
         db_table = "fornecedores"
@@ -53,16 +59,17 @@ class Fornecedor(models.Model):
 class Produto(models.Model):
     categoria = models.ForeignKey(
         Categoria,
+        verbose_name="Categoria",
         on_delete=models.PROTECT,
         related_name="produtos",
     )
-    codigo = models.CharField(max_length=40, unique=True)
-    descricao = models.CharField(max_length=255)
-    unidade_medida = models.CharField(max_length=16, default="UN")
-    estoque_minimo = models.DecimalField(max_digits=14, decimal_places=3, default=0)
-    controla_validade = models.BooleanField(default=True)
-    ativo = models.BooleanField(default=True)
-    criado_em = models.DateTimeField(auto_now_add=True)
+    codigo = models.CharField("Código", max_length=40, unique=True)
+    descricao = models.CharField("Descrição", max_length=255)
+    unidade_medida = models.CharField("Unidade de medida", max_length=16, default="UN")
+    estoque_minimo = models.DecimalField("Estoque mínimo", max_digits=14, decimal_places=3, default=0)
+    controla_validade = models.BooleanField("Controlar validade", default=True)
+    ativo = models.BooleanField("Ativo", default=True)
+    criado_em = models.DateTimeField("Criado em", auto_now_add=True)
 
     class Meta:
         db_table = "produtos"
@@ -73,16 +80,22 @@ class Produto(models.Model):
 
 
 class Lote(models.Model):
-    produto = models.ForeignKey(Produto, on_delete=models.PROTECT, related_name="lotes")
-    fornecedor = models.ForeignKey(
-        Fornecedor,
+    produto = models.ForeignKey(
+        Produto,
+        verbose_name="Produto",
         on_delete=models.PROTECT,
         related_name="lotes",
     )
-    codigo_lote = models.CharField(max_length=80)
-    data_validade = models.DateField(null=True, blank=True)
-    quantidade_atual = models.DecimalField(max_digits=14, decimal_places=3, default=0)
-    criado_em = models.DateTimeField(auto_now_add=True)
+    fornecedor = models.ForeignKey(
+        Fornecedor,
+        verbose_name="Fornecedor",
+        on_delete=models.PROTECT,
+        related_name="lotes",
+    )
+    codigo_lote = models.CharField("Código do lote", max_length=80)
+    data_validade = models.DateField("Data de validade", null=True, blank=True)
+    quantidade_atual = models.DecimalField("Quantidade atual", max_digits=14, decimal_places=3, default=0)
+    criado_em = models.DateTimeField("Criado em", auto_now_add=True)
 
     class Meta:
         db_table = "lotes"
