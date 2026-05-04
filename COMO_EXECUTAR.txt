@@ -44,3 +44,22 @@ Perfil CONSULTA: apenas leitura nas telas de criação/edição (mixin EscritaNe
    - Testar: http://SEU_IP:8000
    - Firewall (opcional): sudo ufw allow OpenSSH && sudo ufw allow 8000/tcp && sudo ufw enable
    - Produção: colocar Nginx/Caddy à frente na porta 443 (HTTPS); não exponha root por palavra-passe.
+
+9) Domínio e subdomínio (ex.: nutriamor.cienciadedadosunivesp.app.br)
+   DNS (no painel do domínio cienciadedadosunivesp.app.br):
+   - Tipo A, nome "nutriamor", valor = IP público da VPS (ou CNAME se o registador permitir apontar para o host raiz).
+   - Propagação pode levar de minutos a algumas horas.
+   No servidor Ubuntu:
+   - sudo apt install -y nginx
+   - Copie deploy/nginx-nutriamor-subdominio.conf para /etc/nginx/sites-available/nutriamor e ajuste server_name se necessário.
+   - sudo ln -sf /etc/nginx/sites-available/nutriamor /etc/nginx/sites-enabled/
+   - sudo nginx -t && sudo systemctl reload nginx
+   - sudo ufw allow 'Nginx Full'   (ou allow 80,443/tcp)
+   - SSL: sudo apt install -y certbot python3-certbot-nginx
+         sudo certbot --nginx -d nutriamor.cienciadedadosunivesp.app.br
+   No .env da app (Docker):
+   - ALLOWED_HOSTS=nutriamor.cienciadedadosunivesp.app.br,127.0.0.1
+   - CSRF_TRUSTED_ORIGINS=https://nutriamor.cienciadedadosunivesp.app.br
+   - BEHIND_HTTPS_PROXY=True
+   - Reinicie: docker compose --profile full up -d --build
+   Aceda: https://nutriamor.cienciadedadosunivesp.app.br
