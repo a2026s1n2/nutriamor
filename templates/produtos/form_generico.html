@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block topbar_title %}<span class="topbar-crumb">{{ titulo|default:"Cadastro" }}</span>{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <h1>{{ titulo|default:"Formulário" }}</h1>
+    {% if ajuda %}<p class="page-head__sub">{{ ajuda }}</p>{% else %}<p class="page-head__sub">Preencha os campos e guarde para atualizar o sistema.</p>{% endif %}
+  </div>
+</section>
+
+<div class="sheet">
+  <div class="sheet-header">
+    <div class="sheet-header__titles">
+      <h2>Dados do registo</h2>
+      <p>Campos marcados com * são obrigatórios.</p>
+    </div>
+  </div>
+  <div class="sheet-body">
+    <form method="post" class="stack-form stack-form--grid">
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="form-errors field-span-2">{{ form.non_field_errors }}</div>{% endif %}
+      {% for field in form %}
+      <label class="{% if field.name == 'descricao' or field.name == 'observacao' %}field-span-2{% endif %}{% if field.field.required %} req{% endif %}">{{ field.label }}
+        {{ field }}
+        {% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}
+        {% for err in field.errors %}<span class="error">{{ err }}</span>{% endfor %}
+      </label>
+      {% endfor %}
+      <div class="form-actions field-span-2">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a class="btn btn-ghost" href="javascript:history.back()">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

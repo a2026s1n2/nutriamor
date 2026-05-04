@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}NutriAmor{% endblock %} — Controlo de stock</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="{% if user.is_authenticated %}has-sidebar{% endif %}">
+  <a class="skip-link" href="#conteudo">Saltar para o conteúdo</a>
+
+  {% if user.is_authenticated %}
+  <div class="sidebar-backdrop" data-sidebar-backdrop hidden aria-hidden="true"></div>
+
+  <aside class="sidebar" id="sidebar" aria-label="Menu principal">
+    <div class="sidebar-brand">
+      <a class="brand brand--sidebar" href="{% url 'core:dashboard' %}">
+        {% include "partials/brand_logo.html" with logo_size="md" %}
+        <span class="brand-text">NutriAmor</span>
+      </a>
+      <p class="sidebar-tagline">Stock &amp; rastreio</p>
+    </div>
+
+    <nav class="side-nav">
+      {% with ns=request.resolver_match.namespace nm=request.resolver_match.url_name %}
+      <div class="side-nav__section">
+        <a href="{% url 'core:dashboard' %}" class="side-nav__link{% if ns == 'core' and nm == 'dashboard' %} is-active{% endif %}">
+          <span class="side-nav__ico" aria-hidden="true">▣</span>
+          Painel
+        </a>
+      </div>
+
+      <div class="side-nav__section">
+        <p class="side-nav__title">Cadastros</p>
+        <a href="{% url 'produtos:categoria_list' %}" class="side-nav__link{% if ns == 'produtos' and 'categoria' in nm %} is-active{% endif %}">
+          <span class="side-nav__ico" aria-hidden="true">◇</span> Categorias
+        </a>
+        <a href="{% url 'produtos:tipo_fornecedor_list' %}" class="side-nav__link{% if ns == 'produtos' and 'tipo_fornecedor' in nm %} is-active{% endif %}">
+          <span class="side-nav__ico" aria-hidden="true">◎</span> Tipos fornecedor
+        </a>
+        <a href="{% url 'produtos:fornecedor_list' %}" class="side-nav__link{% if ns == 'produtos' and 'fornecedor' in nm %} is-active{% endif %}">
+          <span class="side-nav__ico" aria-hidden="true">⬡</span> Fornecedores
+        </a>
+        <a href="{% url 'produtos:produto_list' %}" class="side-nav__link{% if ns == 'produtos' and 'produto' in nm %} is-active{% endif %}">
+          <span class="side-nav__ico" aria-hidden="true">▤</span> Produtos
+        </a>
+        <a href="{% url 'produtos:lote_list' %}" class="side-nav__link{% if ns == 'produtos' and 'lote' in nm %} is-active{% endif %}">
+          <span class="side-nav__ico" aria-hidden="true">▦</span> Lotes
+        </a>
+      </div>
+
+      <div class="side-nav__section">
+        <p class="side-nav__title">Estoque</p>
+        <a href="{% url 'estoque:movimentacao_list' %}" class="side-nav__link{% if ns == 'estoque' and nm == 'movimentacao_list' %} is-active{% endif %}">
+          <span class="side-nav__ico" aria-hidden="true">↔</span> Movimentações
+        </a>
+        <a href="{% url 'estoque:entrada_sem_nota' %}" class="side-nav__link{% if ns == 'estoque' and nm == 'entrada_sem_nota' %} is-active{% endif %}">
+          <span class="side-nav__ico" aria-hidden="true">＋</span> Entrada sem nota
+        </a>
+        <a href="{% url 'estoque:movimentacao_create' %}" class="side-nav__link{% if ns == 'estoque' and nm == 'movimentacao_create' %} is-active{% endif %}">
+          <span class="side-nav__ico" aria-hidden="true">⚡</span> Movimentação (lote)
+        </a>
+        <a href="{% url 'estoque:danfe_list' %}" class="side-nav__link{% if ns == 'estoque' and nm == 'danfe_list' or ns == 'estoque' and nm == 'danfe_create' %} is-active{% endif %}">
+          <span class="side-nav__ico" aria-hidden="true">📄</span> DANFEs
+        </a>
+        <a href="{% url 'estoque:nfe_xml_upload' %}" class="side-nav__link{% if nm == 'nfe_xml_upload' or nm == 'nfe_xml_review' %} is-active{% endif %}">
+          <span class="side-nav__ico" aria-hidden="true">⬍</span> Importar XML NF-e
+        </a>
+      </div>
+      {% endwith %}
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-chip__avatar" aria-hidden="true">{{ user.nome.0|default:user.email.0|upper }}</div>
+        <div class="user-chip__meta">
+          <span class="user-chip__name">{{ user.nome }}</span>
+          {% if user.perfil %}<span class="pill pill--sm">{{ user.perfil.nome }}</span>{% endif %}
+        </div>
+      </div>
+      <div class="sidebar-actions">
+        <a class="btn btn-ghost btn--sm" href="{% url 'admin:index' %}">Admin</a>
+        <form class="inline-form" method="post" action="{% url 'core:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline btn--sm">Sair</button>
+        </form>
+      </div>
+    </div>
+  </aside>
+  {% endif %}
+
+  <div class="app-shell">
+    {% if user.is_authenticated %}
+    <header class="app-topbar">
+      <button type="button" class="sidebar-open" data-sidebar-open aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu">
+        <span class="sidebar-open__bar"></span>
+        <span class="sidebar-open__bar"></span>
+        <span class="sidebar-open__bar"></span>
+      </button>
+      <div class="app-topbar__fill">
+        {% block topbar_title %}{% endblock %}
+      </div>
+    </header>
+    {% else %}
+    <header class="topbar topbar--simple">
+      <div class="topbar-inner topbar-inner--center">
+        <a class="brand brand--guest" href="{% url 'core:login' %}">
+          {% include "partials/brand_logo.html" with logo_size="md" %}
+          <span class="brand-text">NutriAmor</span>
+        </a>
+      </div>
+    </header>
+    {% endif %}
+
+    {% if messages %}
+    <div class="flash-wrap flash-wrap--inset">
+      {% for message in messages %}
+      <div class="flash flash-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <main id="conteudo" class="main {% if user.is_authenticated %}main--fluid{% endif %}">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer {% if user.is_authenticated %}footer--inset{% endif %}">
+      <p>NutriAmor — PI Univesp · Modelo alinhado ao DER e à documentação do grupo.</p>
+    </footer>
+  </div>
+
+  {% if user.is_authenticated %}
+  <script>
+    (function () {
+      var openBtn = document.querySelector("[data-sidebar-open]");
+      var sidebar = document.getElementById("sidebar");
+      var backdrop = document.querySelector("[data-sidebar-backdrop]");
+      if (!openBtn || !sidebar || !backdrop) return;
+      function setOpen(open) {
+        document.body.classList.toggle("sidebar-open", open);
+        openBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        backdrop.hidden = !open;
+        backdrop.setAttribute("aria-hidden", open ? "false" : "true");
+      }
+      openBtn.addEventListener("click", function () {
+        setOpen(!document.body.classList.contains("sidebar-open"));
+      });
+      backdrop.addEventListener("click", function () { setOpen(false); });
+      window.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") setOpen(false);
+      });
+    })();
+  </script>
+  {% endif %}
+</body>
+</html>

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block topbar_title %}<span class="topbar-crumb">Lotes</span>{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <h1>Lotes</h1>
+    <p class="page-head__sub">Rastreio por validade e fornecedor — saldo atualizado por movimentações.</p>
+  </div>
+  {% if user.pode_escrita %}
+  <a class="btn btn-primary" href="{% url 'produtos:lote_create' %}">+ Novo lote</a>
+  {% endif %}
+</section>
+<div class="sheet">
+  <div class="sheet-body sheet-body--tight-top">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Código lote</th><th>Produto</th><th>Fornecedor</th><th>Qtd</th><th>Validade</th></tr></thead>
+        <tbody>
+          {% for l in itens %}
+          <tr>
+            <td>{{ l.codigo_lote }}</td>
+            <td>{{ l.produto.codigo }}</td>
+            <td>{{ l.fornecedor }}</td>
+            <td>{{ l.quantidade_atual }}</td>
+            <td>{{ l.data_validade|default:"—" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="muted">Sem registos.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if is_paginated %}
+    <nav class="pager">
+      {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">← Anterior</a>{% endif %}
+      <span class="muted">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Seguinte →</a>{% endif %}
+    </nav>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

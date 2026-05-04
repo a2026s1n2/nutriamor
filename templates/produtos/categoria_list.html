@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block topbar_title %}<span class="topbar-crumb">Categorias</span>{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <h1>Categorias</h1>
+    <p class="page-head__sub">Classificação exclusiva de produtos — alinhado à documentação do projeto.</p>
+  </div>
+  {% if user.pode_escrita %}
+  <a class="btn btn-primary" href="{% url 'produtos:categoria_create' %}">+ Nova categoria</a>
+  {% endif %}
+</section>
+
+<div class="sheet">
+  <div class="sheet-body sheet-body--tight-top">
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Nome</th><th>Ativa</th>{% if user.pode_escrita %}<th></th>{% endif %}</tr></thead>
+      <tbody>
+        {% for c in itens %}
+        <tr>
+          <td>{{ c.nome }}</td>
+          <td>{% if c.ativo %}Sim{% else %}Não{% endif %}</td>
+          {% if user.pode_escrita %}<td><a href="{% url 'produtos:categoria_update' c.pk %}">Editar</a></td>{% endif %}
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="muted">Sem registos.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nfeProc xmlns="http://www.portalfiscal.inf.br/nfe"><NFe><infNFe Id="NFe35211111111111111111111111111111111111111111">
+<ide><nNF>99</nNF><serie>1</serie><dhEmi>2026-03-10T12:00:00-03:00</dhEmi></ide>
+<emit><CNPJ>11222333000181</CNPJ><xNome>Emitente XML Teste</xNome></emit>
+<det nItem="1"><prod><cProd>REF-A</cProd><xProd>Item A desc</xProd><uCom>UN</uCom><qCom>2.0000</qCom><vUnCom>5.0000</vUnCom><vProd>10.00</vProd></prod></det>
+<total><ICMSTot><vNF>10.00</vNF></ICMSTot></total>
+</infNFe></NFe></nfeProc>

@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}Painel · {{ block.super }}{% endblock %}
+{% block topbar_title %}
+<span class="topbar-crumb">Painel</span>
+{% endblock %}
+{% block content %}
+<section class="bi-hero">
+  <div class="bi-hero__text">
+    <h2 class="bi-hero__title">Olá, {{ user.nome }}</h2>
+    <p class="bi-hero__lead">Indicadores principais do armazém e alertas para decisão rápida.</p>
+  </div>
+  <div class="bi-hero__date">{{ data_label }}</div>
+</section>
+
+<section class="bi-kpis">
+  <article class="kpi-card kpi-card--accent">
+    <span class="kpi-card__label">Unidades em stock</span>
+    <span class="kpi-card__value">{{ stock_total_unidades|floatformat:0 }}</span>
+    <span class="kpi-card__hint">Soma dos lotes ativos</span>
+  </article>
+  <article class="kpi-card">
+    <span class="kpi-card__label">Produtos ativos</span>
+    <span class="kpi-card__value">{{ total_produtos }}</span>
+    <span class="kpi-card__hint">{{ total_categorias }} categorias</span>
+  </article>
+  <article class="kpi-card">
+    <span class="kpi-card__label">Lotes</span>
+    <span class="kpi-card__value">{{ total_lotes }}</span>
+    <span class="kpi-card__hint">{{ lotes_vencer_30d }} a vencer (30 dias)</span>
+  </article>
+  <article class="kpi-card">
+    <span class="kpi-card__label">Movimentações hoje</span>
+    <span class="kpi-card__value">{{ mov_hoje }}</span>
+    <span class="kpi-card__hint">{{ mov_7d_total }} nos últimos 7 dias</span>
+  </article>
+  <article class="kpi-card">
+    <span class="kpi-card__label">Fornecedores ativos</span>
+    <span class="kpi-card__value">{{ total_fornecedores }}</span>
+    <span class="kpi-card__hint">Inclui doadores</span>
+  </article>
+</section>
+
+<section class="bi-grid">
+  <div class="bi-panel bi-panel--chart">
+    <div class="bi-panel__head">
+      <h3>Movimentações por dia</h3>
+      <span class="bi-panel__tag">últimos 7 dias</span>
+    </div>
+    <div class="bar-chart" role="img" aria-label="Gráfico de barras dos últimos 7 dias">
+      {% for row in mov_por_dia %}
+      <div class="bar-chart__item">
+        <div class="bar-chart__meta">
+          <span class="bar-chart__label">{{ row.label }}</span>
+          <span class="bar-chart__num">{{ row.total }}</span>
+        </div>
+        <div class="bar-chart__track">
+          <div class="bar-chart__bar" style="width: {% widthratio row.total mov_chart_max 100 %}%;"></div>
+        </div>
+      </div>
+      {% empty %}
+      <p class="muted">Sem dados para o período.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="bi-panel">
+    <div class="bi-panel__head">
+      <h3>Entradas vs saídas</h3>
+      <span class="bi-panel__tag">30 dias</span>
+    </div>
+    <div class="donut-row">
+      <div class="donut-stat">
+        <span class="donut-stat__value text-accent">{{ entradas_30d }}</span>
+        <span class="donut-stat__label">Entradas</span>
+      </div>
+      <div class="donut-stat">
+        <span class="donut-stat__value text-blue">{{ saidas_30d }}</span>
+        <span class="donut-stat__label">Saídas</span>
+      </div>
+    </div>
+    <p class="muted bi-note">Contagem de movimentações por tipo (documentação: ENTRADA / SAIDA).</p>
+  </div>
+
+  <div class="bi-panel bi-panel--span2">
+    <div class="bi-panel__head">
+      <h3>Top produtos por volume em lotes</h3>
+    </div>
+    <div class="table-wrap table-wrap--flush">
+      <table class="data-table data-table--compact">
+        <thead><tr><th>Código</th><th>Descrição</th><th class="num">Volume</th></tr></thead>
+        <tbody>
+          {% for r in top_produtos_volume %}
+          <tr>
+            <td><strong>{{ r.produto__codigo }}</strong></td>
+            <td>{{ r.produto__descricao|truncatechars:42 }}</td>
+            <td class="num">{{ r.vol|floatformat:0 }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="muted">Sem lotes com quantidade.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="bi-panel">
+    <div class="bi-panel__head">
+      <h3>Últimas movimentações</h3>
+    </div>
+    <ul class="feed-list">
+      {% for m in ultimas_movs %}
+      <li class="feed-list__item">
+        <span class="feed-list__badge">{{ m.tipo_movimentacao.codigo }}</span>
+        <span class="feed-list__main">{{ m.lote.produto.codigo }} · {{ m.quantidade }}</span>
+        <span class="feed-list__sub">{{ m.data_movimento }} — {{ m.usuario.nome }}</span>
+      </li>
+      {% empty %}
+      <li class="muted">Nenhum registo ainda.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="bi-panel bi-panel--alert">
+    <div class="bi-panel__head">
+      <h3>Stock abaixo do mínimo</h3>
+      <span class="bi-panel__tag bi-panel__tag--warn">alerta</span>
+    </div>
+    {% if abaixo_minimo %}
+    <ul class="list-alert list-alert--tight">
+      {% for row in abaixo_minimo %}
+      <li><strong>{{ row.produto.codigo }}</strong> — saldo {{ row.saldo }} (mín. {{ row.produto.estoque_minimo }})</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="muted bi-ok">✓ Nenhum produto abaixo do mínimo neste momento.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

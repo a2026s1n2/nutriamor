@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block topbar_title %}<span class="topbar-crumb">Importar XML NF-e</span>{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <h1>Importar XML da NF-e</h1>
+    <p class="page-head__sub">Lê o XML autorizado, cruza <strong>código de referência</strong> (cProd) com produtos e o emitente com fornecedores. Gera DANFE, itens, lotes e entradas de stock.</p>
+  </div>
+  <a class="btn btn-secondary" href="{% url 'estoque:danfe_list' %}">← Voltar às DANFEs</a>
+</section>
+
+<div class="sheet">
+  <div class="sheet-header">
+    <div class="sheet-header__titles">
+      <h2>Envio do ficheiro</h2>
+      <p>Use o XML completo (ex.: nfeProc). A chave de 44 dígitos não pode já existir no sistema.</p>
+    </div>
+  </div>
+  <div class="sheet-body">
+    <form method="post" enctype="multipart/form-data" class="stack-form">
+      {% csrf_token %}
+      {% for field in form %}
+      <label class="req">{{ field.label }}
+        {{ field }}
+        {% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}
+        {% for err in field.errors %}<span class="error">{{ err }}</span>{% endfor %}
+      </label>
+      {% endfor %}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Continuar para revisão</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

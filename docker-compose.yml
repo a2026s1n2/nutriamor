@@ -1,0 +1,35 @@
+# Desenvolvimento local: só PostgreSQL
+# Produção / stack completo: docker compose --profile full up --build
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: nutriamor
+      POSTGRES_PASSWORD: nutriamor
+      POSTGRES_DB: nutriamor
+    ports:
+      - "5432:5432"
+    volumes:
+      - nutri_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nutriamor -d nutriamor"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    profiles: ["full"]
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      USE_SQLITE: "False"
+      DATABASE_URL: postgres://nutriamor:nutriamor@db:5432/nutriamor
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  nutri_pg:

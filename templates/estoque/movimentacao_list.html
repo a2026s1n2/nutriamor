@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block topbar_title %}<span class="topbar-crumb">Movimentações</span>{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <h1>Movimentações</h1>
+    <p class="page-head__sub">Histórico por tipo, lote e utilizador — stock atualizado automaticamente.</p>
+  </div>
+  {% if user.pode_escrita %}
+  <div class="row-actions">
+    <a class="btn btn-secondary" href="{% url 'estoque:entrada_sem_nota' %}">Entrada sem nota</a>
+    <a class="btn btn-primary" href="{% url 'estoque:movimentacao_create' %}">+ Nova movimentação</a>
+  </div>
+  {% endif %}
+</section>
+<div class="sheet">
+  <div class="sheet-body sheet-body--tight-top">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Data</th><th>Tipo</th><th>Lote</th><th>Qtd</th><th>Utilizador</th></tr></thead>
+        <tbody>
+          {% for m in itens %}
+          <tr>
+            <td>{{ m.data_movimento }}</td>
+            <td><span class="pill">{{ m.tipo_movimentacao.codigo }}</span> {{ m.tipo_movimentacao.nome }}</td>
+            <td>{{ m.lote }}</td>
+            <td>{{ m.quantidade }}</td>
+            <td>{{ m.usuario.nome }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="muted">Sem movimentações.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if is_paginated %}
+    <nav class="pager">
+      {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">←</a>{% endif %}
+      <span class="muted">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">→</a>{% endif %}
+    </nav>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

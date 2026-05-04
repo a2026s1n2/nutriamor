@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Entrar · {{ block.super }}{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <section class="auth-card">
+    <div class="auth-brand">
+      {% include "partials/brand_logo.html" with logo_size="lg" %}
+      <span class="auth-brand__text">NutriAmor</span>
+    </div>
+    <h1>Entrar</h1>
+    <p class="muted">Utilize o e-mail e a palavra-passe da sua conta.</p>
+    <form method="post" class="stack-form" action="{% url 'core:login' %}">
+      {% csrf_token %}
+      {% if request.GET.next %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% endif %}
+      {% if form.non_field_errors %}
+      <div class="form-errors">{{ form.non_field_errors }}</div>
+      {% endif %}
+      {% for field in form %}
+      <label{% if field.field.required %} class="req"{% endif %}>{{ field.label }}
+        {{ field }}
+        {% for err in field.errors %}<span class="error">{{ err }}</span>{% endfor %}
+      </label>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

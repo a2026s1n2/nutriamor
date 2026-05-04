@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block topbar_title %}<span class="topbar-crumb">Revisão importação XML</span>{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <h1>Revisão antes de importar</h1>
+    <p class="page-head__sub">Confirme o fornecedor e os produtos em falta. Pode criar registos a partir dos dados do XML.</p>
+  </div>
+  <a class="btn btn-secondary" href="{% url 'estoque:nfe_xml_upload' %}">← Outro XML</a>
+</section>
+
+<form method="post" class="sheet">
+  {% csrf_token %}
+  <div class="sheet-header">
+    <div class="sheet-header__titles">
+      <h2>Resumo da nota</h2>
+      <p>Chave <span class="mono">{{ parsed.chave_44 }}</span> · Nº {{ parsed.numero }} · Série {{ parsed.serie }} · Total R$ {{ parsed.valor_total }}</p>
+    </div>
+  </div>
+  <div class="sheet-body">
+    <section class="xml-block">
+      <h3 class="xml-block__title">Emitente (fornecedor)</h3>
+      <p><strong>{{ fornecedor_xml_nome }}</strong><br>
+        <span class="muted">Documento no XML:</span> <code>{{ fornecedor_xml_doc }}</code></p>
+      {% if fornecedor_match %}
+      <p class="badge-ok">✓ Encontrado no sistema: <strong>{{ fornecedor_match.razao_social }}</strong> (documento {{ fornecedor_match.documento }})</p>
+      {% else %}
+      <p class="badge-warn">Fornecedor não encontrado pelo CNPJ/CPF.</p>
+      <label class="chk-inline">
+        <input type="checkbox" name="criar_fornecedor" value="on" {% if pre_criar_forn %}checked{% endif %}>
+        Criar fornecedor a partir do XML (razão social e documento acima)
+      </label>
+      {% endif %}
+    </section>
+
+    <section class="xml-block">
+      <h3 class="xml-block__title">Categoria padrão para novos produtos</h3>
+      <p class="muted">Usada quando marcar «Criar produto» e deixar a categoria da linha em branco.</p>
+      <select name="categoria_padrao" class="select-inline">
+        <option value="">— opcional —</option>
+        {% for c in categorias %}
+        <option value="{{ c.pk }}" {% if pre_cat_padrao == c.pk|stringformat:"s" %}selected{% endif %}>{{ c.nome }}</option>
+        {% endfor %}
+      </select>
+    </section>
+
+    <section class="xml-block">
+      <h3 class="xml-block__title">Itens da nota</h3>
+      <div class="table-wrap">
+        <table class="data-table data-table--compact">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Cód. ref. (cProd)</th>
+              <th>Descrição XML</th>
+              <th>Qtd</th>
+              <th>Estado</th>
+              <th>Em falta: criar produto</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for linha in linhas %}
+            <tr class="{% if linha.ok %}row-ok{% else %}row-pend{% endif %}">
+              <td>{{ linha.item.n_item }}</td>
+              <td><code>{{ linha.item.c_prod }}</code></td>
+              <td>{{ linha.item.x_prod|truncatechars:44 }}</td>
+              <td>{{ linha.item.q_com }}</td>
+              <td>
+                {% if linha.ok %}
+                <span class="badge-ok">Existe</span>
+                <div class="muted small">{{ linha.produto.descricao|truncatechars:36 }}</div>
+                {% else %}
+                <span class="badge-warn">Sem cadastro</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if not linha.ok %}
+                <label class="chk-inline chk-stack">
+                  <input type="checkbox" name="criar_{{ linha.idx }}" value="on" {% if linha.prefill_criar %}checked{% endif %}>
+                  Criar produto
+                </label>
+                <label class="lbl-sm">Descrição a gravar</label>
+                <input type="text" name="descricao_{{ linha.idx }}" class="input-sm" value="{{ linha.prefill_desc }}">
+                <label class="lbl-sm">Categoria (linha)</label>
+                <select name="categoria_{{ linha.idx }}" class="select-sm">
+                  <option value="">— usar padrão —</option>
+                  {% for c in categorias %}
+                  <option value="{{ c.pk }}" {% if linha.prefill_cat == c.pk|stringformat:"s" %}selected{% endif %}>{{ c.nome }}</option>
+                  {% endfor %}
+                </select>
+                {% else %}
+                <span class="muted">—</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="form-actions" style="margin-top:1.25rem;">
+      <button type="submit" class="btn btn-primary">Confirmar importação</button>
+      <a class="btn btn-ghost" href="{% url 'estoque:danfe_list' %}">Cancelar</a>
+    </div>
+  </div>
+</form>
+{% endblock %}

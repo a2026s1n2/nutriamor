@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block topbar_title %}<span class="topbar-crumb">Tipos de fornecedor</span>{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <h1>Tipos de fornecedor</h1>
+    <p class="page-head__sub">Ex.: indústria, doador, comércio — usado no cadastro de fornecedores.</p>
+  </div>
+  {% if user.pode_escrita %}
+  <a class="btn btn-primary" href="{% url 'produtos:tipo_fornecedor_create' %}">+ Novo tipo</a>
+  {% endif %}
+</section>
+<div class="sheet">
+  <div class="sheet-body sheet-body--tight-top">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Nome</th></tr></thead>
+        <tbody>
+          {% for t in itens %}
+          <tr><td>{{ t.nome }}</td></tr>
+          {% empty %}
+          <tr><td class="muted">Sem registos.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

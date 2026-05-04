@@ -1,0 +1,14 @@
+{% load static %}
+<span class="brand-lockup">
+  <img
+    class="brand-logo brand-logo--{{ logo_size|default:'md' }}"
+    src="{% static 'img/logo.jpeg' %}"
+    alt=""
+    decoding="async"
+    loading="lazy"
+    onerror="this.classList.add('is-hidden'); var fb=this.nextElementSibling; if(fb) fb.classList.remove('is-hidden');"
+  >
+  {% if logo_show_fallback|default:True %}
+  <span class="brand-fallback is-hidden" aria-hidden="true">●</span>
+  {% endif %}
+</span>

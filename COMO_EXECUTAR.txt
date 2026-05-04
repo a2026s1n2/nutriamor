@@ -1,0 +1,46 @@
+NutriAmor-Web — como executar
+=============================
+
+1) Criar ambiente virtual e instalar dependências:
+   python -m venv .venv
+   .venv\Scripts\activate
+   pip install -r requirements.txt
+
+2) Configurar .env (copiar de .env.example):
+   - Para testar sem PostgreSQL: USE_SQLITE=True
+   - Para PostgreSQL: USE_SQLITE=False e DATABASE_URL=postgres://utilizador:senha@host:5432/nutriamor
+
+3) Migrações e dados iniciais:
+   python manage.py migrate
+   python manage.py seed_base
+   python manage.py createsuperuser   (e-mail, nome, perfil no admin depois)
+
+4) Servidor:
+   python manage.py runserver
+
+5) SQL de referência (revisão DBA): database/schema.sql
+
+6) Importar NF-e por XML: menu «Importar XML NF-e» ou Estoque → DANFEs → «Importar XML». Os dados ficam em cache 1 hora (revisão antes de gravar).
+
+Perfil CONSULTA: apenas leitura nas telas de criação/edição (mixin EscritaNecessariaMixin).
+
+7) Docker (PostgreSQL + Gunicorn)
+   - Copie .env.docker.example para .env e defina SECRET_KEY e ALLOWED_HOSTS (domínio ou IP do servidor).
+   - Stack completo: docker compose --profile full up --build
+   - Só base de dados (Django na máquina): docker compose up -d db
+   - Primeira vez no contentor: docker compose --profile full run --rm web python manage.py seed_base
+   - Superutilizador: docker compose --profile full run --rm web python manage.py createsuperuser
+
+8) VPS Ubuntu 24.04 (Hostinger / qualquer servidor)
+   - Envie o projeto (git clone, scp ou rsync) para a VPS, ex.: /opt/nutriamor-web
+   - Instalar Docker + Compose (repositório oficial Ubuntu noble / 24.04):
+       sudo bash deploy/install-docker-ubuntu24.sh
+   - Dentro da pasta NutriAmor-Web:
+       cp .env.docker.example .env
+       nano .env   → SECRET_KEY forte, DEBUG=False, ALLOWED_HOSTS=IP_ou_dominio
+       docker compose --profile full up -d --build
+       docker compose --profile full run --rm web python manage.py seed_base
+       docker compose --profile full run --rm web python manage.py createsuperuser
+   - Testar: http://SEU_IP:8000
+   - Firewall (opcional): sudo ufw allow OpenSSH && sudo ufw allow 8000/tcp && sudo ufw enable
+   - Produção: colocar Nginx/Caddy à frente na porta 443 (HTTPS); não exponha root por palavra-passe.
