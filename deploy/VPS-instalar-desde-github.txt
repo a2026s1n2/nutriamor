@@ -34,7 +34,10 @@ Branch: main
 
 5) Dados iniciais e administrador (primeira vez)
    docker compose --profile full run --rm web python manage.py seed_base
-   docker compose --profile full run --rm web python manage.py createsuperuser
+   docker compose --profile full run --rm web python manage.py ensure_admin \
+     --email admin@nutriamor.cienciadedadosunivesp.app.br \
+     --password 'SUBSTITUA_POR_SENHA_FORTE'
+   (ou: createsuperuser interativo)
 
 6) Teste direto na porta 8000
    http://SEU_IP:8000

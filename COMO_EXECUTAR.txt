@@ -15,7 +15,8 @@ NutriAmor-Web — como executar
 3) Migrações e dados iniciais:
    python manage.py migrate
    python manage.py seed_base
-   python manage.py createsuperuser   (e-mail, nome, perfil no admin depois)
+   python manage.py ensure_admin --email admin@nutriamor.cienciadedadosunivesp.app.br --password 'SENHA_FORTE'
+   (alternativa interativa: python manage.py createsuperuser)
 
 4) Servidor:
    python manage.py runserver
@@ -31,7 +32,8 @@ Perfil CONSULTA: apenas leitura nas telas de criação/edição (mixin EscritaNe
    - Stack completo: docker compose --profile full up --build
    - Só base de dados (Django na máquina): docker compose up -d db
    - Primeira vez no contentor: docker compose --profile full run --rm web python manage.py seed_base
-   - Superutilizador: docker compose --profile full run --rm web python manage.py createsuperuser
+   - Administrador com e-mail do domínio: docker compose --profile full run --rm web python manage.py ensure_admin --email admin@nutriamor.cienciadedadosunivesp.app.br --password 'SENHA_FORTE'
+   - Superutilizador (interativo): docker compose --profile full run --rm web python manage.py createsuperuser
 
 8) VPS Ubuntu 24.04 — clone e deploy (passo a passo completo)
    - Repositório: git clone https://github.com/a2026s1n2/nutriamor.git
