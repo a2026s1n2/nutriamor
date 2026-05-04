@@ -1,0 +1,57 @@
+NutriAmor — instalar na VPS a partir do GitHub (repositório oficial)
+=====================================================================
+
+Repositório: https://github.com/a2026s1n2/nutriamor
+Branch: main
+
+0) (Opcional) Remover instalação antiga
+   cd /opt/nutriamor-web
+   docker compose --profile full down
+   cd /opt && rm -rf nutriamor-web
+   (Use "docker compose ... down -v" só se quiser apagar a base de dados.)
+
+1) Clonar o código
+   apt-get update && apt-get install -y git
+   cd /opt
+   git clone https://github.com/a2026s1n2/nutriamor.git nutriamor-web
+   cd nutriamor-web
+
+2) Instalar Docker (Ubuntu 24.04, uma vez por servidor)
+   sudo bash deploy/install-docker-ubuntu24.sh
+
+3) Configurar variáveis de ambiente
+   cp .env.docker.example .env
+   nano .env
+   Ajuste obrigatório:
+   - SECRET_KEY  → chave longa (ex.: python3 -c "import secrets; print(secrets.token_urlsafe(50))")
+   - ALLOWED_HOSTS  → IP da VPS, nutriamor.cienciadedadosunivesp.app.br,127.0.0.1
+   - CSRF_TRUSTED_ORIGINS  → https://nutriamor.cienciadedadosunivesp.app.br
+   - BEHIND_HTTPS_PROXY=True  (se usar Nginx com HTTPS na frente)
+   Guarde: Ctrl+O, Enter, Ctrl+X
+
+4) Subir PostgreSQL + aplicação
+   docker compose --profile full up -d --build
+
+5) Dados iniciais e administrador (primeira vez)
+   docker compose --profile full run --rm web python manage.py seed_base
+   docker compose --profile full run --rm web python manage.py createsuperuser
+
+6) Teste direto na porta 8000
+   http://SEU_IP:8000
+
+7) Nginx + HTTPS (subdomínio)
+   - DNS: registo A "nutriamor" → IP da VPS
+   - sudo apt install -y nginx
+   - sudo cp deploy/nginx-nutriamor-subdominio.conf /etc/nginx/sites-available/nutriamor
+   - sudo ln -sf /etc/nginx/sites-available/nutriamor /etc/nginx/sites-enabled/
+   - sudo nginx -t && sudo systemctl reload nginx
+   - sudo ufw allow OpenSSH && sudo ufw allow 'Nginx Full' && sudo ufw enable
+   - sudo apt install -y certbot python3-certbot-nginx
+   - sudo certbot --nginx -d nutriamor.cienciadedadosunivesp.app.br
+
+8) Atualizar depois (novo código)
+   cd /opt/nutriamor-web
+   git pull origin main
+   docker compose --profile full up -d --build
+
+Repositório no GitHub: https://github.com/a2026s1n2/nutriamor

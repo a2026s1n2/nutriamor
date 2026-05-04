@@ -1,3 +1,5 @@
+Repositório GitHub: https://github.com/a2026s1n2/nutriamor
+
 NutriAmor-Web — como executar
 =============================
 
@@ -31,19 +33,13 @@ Perfil CONSULTA: apenas leitura nas telas de criação/edição (mixin EscritaNe
    - Primeira vez no contentor: docker compose --profile full run --rm web python manage.py seed_base
    - Superutilizador: docker compose --profile full run --rm web python manage.py createsuperuser
 
-8) VPS Ubuntu 24.04 (Hostinger / qualquer servidor)
-   - Envie o projeto (git clone, scp ou rsync) para a VPS, ex.: /opt/nutriamor-web
-   - Instalar Docker + Compose (repositório oficial Ubuntu noble / 24.04):
-       sudo bash deploy/install-docker-ubuntu24.sh
-   - Dentro da pasta NutriAmor-Web:
-       cp .env.docker.example .env
-       nano .env   → SECRET_KEY forte, DEBUG=False, ALLOWED_HOSTS=IP_ou_dominio
-       docker compose --profile full up -d --build
-       docker compose --profile full run --rm web python manage.py seed_base
-       docker compose --profile full run --rm web python manage.py createsuperuser
+8) VPS Ubuntu 24.04 — clone e deploy (passo a passo completo)
+   - Repositório: git clone https://github.com/a2026s1n2/nutriamor.git
+   - Ver ficheiro: deploy/VPS-instalar-desde-github.txt
+   - Resumo: clonar em /opt/nutriamor-web, bash deploy/install-docker-ubuntu24.sh, .env, docker compose --profile full up -d --build
    - Testar: http://SEU_IP:8000
    - Firewall (opcional): sudo ufw allow OpenSSH && sudo ufw allow 8000/tcp && sudo ufw enable
-   - Produção: colocar Nginx/Caddy à frente na porta 443 (HTTPS); não exponha root por palavra-passe.
+   - Produção: Nginx/Caddy na porta 443; não exponha root por palavra-passe.
 
 9) Domínio e subdomínio (ex.: nutriamor.cienciadedadosunivesp.app.br)
    DNS (no painel do domínio cienciadedadosunivesp.app.br):
