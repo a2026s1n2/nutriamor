@@ -1,4 +1,5 @@
 Repositório GitHub: https://github.com/a2026s1n2/nutriamor
+Visão geral e histórico: README.md | CHANGELOG.md
 
 NutriAmor-Web — como executar
 =============================
