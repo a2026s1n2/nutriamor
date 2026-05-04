@@ -8,8 +8,8 @@ User = get_user_model()
 
 class Command(BaseCommand):
     help = (
-        "Cria ou atualiza um utilizador com perfil ADMIN (staff + superuser). "
-        "Garante o perfil ADMIN na tabela perfis. Corra depois de migrate (e idealmente seed_base)."
+        "Cria ou atualiza um usuário com perfil ADMIN (staff + superuser). "
+        "Garante o perfil ADMIN na tabela perfis. Execute após migrate (e idealmente seed_base)."
     )
 
     def add_arguments(self, parser):
@@ -21,7 +21,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--password",
             required=True,
-            help="Palavra-passe (use aspas se tiver caracteres especiais)",
+            help="Senha (use aspas se tiver caracteres especiais)",
         )
         parser.add_argument(
             "--nome",
@@ -62,6 +62,6 @@ class Command(BaseCommand):
 
         self.stdout.write(
             self.style.SUCCESS(
-                f"Administrador pronto: {email} (novo={'sim' if created else 'não'}, palavra-passe atualizada)"
+                f"Administrador pronto: {email} (novo={'sim' if created else 'não'}, senha atualizada)"
             )
         )

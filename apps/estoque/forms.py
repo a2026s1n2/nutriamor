@@ -71,10 +71,10 @@ class NfeXmlUploadForm(forms.Form):
     def clean_arquivo(self):
         f = self.cleaned_data["arquivo"]
         if f.size > 3 * 1024 * 1024:
-            raise forms.ValidationError("O ficheiro não pode exceder 3 MB.")
+            raise forms.ValidationError("O arquivo não pode exceder 3 MB.")
         name = (f.name or "").lower()
         if not name.endswith(".xml"):
-            raise forms.ValidationError("O ficheiro deve ter extensão .xml")
+            raise forms.ValidationError("O arquivo deve ter extensão .xml")
         return f
 
 

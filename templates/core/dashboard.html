@@ -14,7 +14,7 @@
 
 <section class="bi-kpis">
   <article class="kpi-card kpi-card--accent">
-    <span class="kpi-card__label">Unidades em stock</span>
+    <span class="kpi-card__label">Unidades em estoque</span>
     <span class="kpi-card__value">{{ stock_total_unidades|floatformat:0 }}</span>
     <span class="kpi-card__hint">Soma dos lotes ativos</span>
   </article>
@@ -78,7 +78,7 @@
         <span class="donut-stat__label">Saídas</span>
       </div>
     </div>
-    <p class="muted bi-note">Contagem de movimentações por tipo (documentação: ENTRADA / SAIDA).</p>
+    <p class="muted bi-note">Contagem de movimentações por tipo (documentação: ENTRADA / SAÍDA).</p>
   </div>
 
   <div class="bi-panel bi-panel--span2">
@@ -115,14 +115,14 @@
         <span class="feed-list__sub">{{ m.data_movimento }} — {{ m.usuario.nome }}</span>
       </li>
       {% empty %}
-      <li class="muted">Nenhum registo ainda.</li>
+      <li class="muted">Nenhum registro ainda.</li>
       {% endfor %}
     </ul>
   </div>
 
   <div class="bi-panel bi-panel--alert">
     <div class="bi-panel__head">
-      <h3>Stock abaixo do mínimo</h3>
+      <h3>Estoque abaixo do mínimo</h3>
       <span class="bi-panel__tag bi-panel__tag--warn">alerta</span>
     </div>
     {% if abaixo_minimo %}

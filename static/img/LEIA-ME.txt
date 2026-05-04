@@ -4,6 +4,6 @@ Coloque aqui a imagem da marca com o nome:
 
 Formato recomendado: JPEG, PNG ou WebP com fundo transparente (PNG/WebP), altura entre 120px e 512px (o site redimensiona).
 
-Se usar outro nome ou formato, edite o ficheiro
+Se usar outro nome ou formato, edite o arquivo
   templates/partials/brand_logo.html
   e altere a linha {% static 'img/logo.jpeg' %}.

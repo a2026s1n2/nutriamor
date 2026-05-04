@@ -18,7 +18,7 @@ class Command(BaseCommand):
             Perfil.objects.get_or_create(codigo=codigo, defaults={"nome": nome})
 
         movs = [
-            ("ENTRADA", "Entrada de stock"),
+            ("ENTRADA", "Entrada de estoque"),
             ("SAIDA", "Saída / consumo"),
             ("AJUSTE", "Ajuste de inventário"),
             ("PERDA", "Perda / vencimento"),

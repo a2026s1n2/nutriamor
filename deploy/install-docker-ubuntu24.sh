@@ -25,5 +25,5 @@ systemctl enable --now docker
 docker --version
 docker compose version
 echo ""
-echo "Docker pronto. No diretório NutriAmor-Web: cp .env.docker.example .env, edite SECRET_KEY e ALLOWED_HOSTS,"
+echo "Docker pronto. Na pasta do projeto: cp .env.docker.example .env, edite SECRET_KEY e ALLOWED_HOSTS,"
 echo "depois: docker compose --profile full up -d --build"

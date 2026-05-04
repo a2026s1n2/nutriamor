@@ -8,7 +8,7 @@ Branch: main
    cd /opt/nutriamor-web
    docker compose --profile full down
    cd /opt && rm -rf nutriamor-web
-   (Use "docker compose ... down -v" só se quiser apagar a base de dados.)
+   (Use "docker compose ... down -v" só se quiser apagar o banco de dados.)
 
 1) Clonar o código
    apt-get update && apt-get install -y git
@@ -22,12 +22,12 @@ Branch: main
 3) Configurar variáveis de ambiente
    cp .env.docker.example .env
    nano .env
-   Ajuste obrigatório:
+   Ajustes obrigatórios:
    - SECRET_KEY  → chave longa (ex.: python3 -c "import secrets; print(secrets.token_urlsafe(50))")
    - ALLOWED_HOSTS  → IP da VPS, nutriamor.cienciadedadosunivesp.app.br,127.0.0.1
    - CSRF_TRUSTED_ORIGINS  → https://nutriamor.cienciadedadosunivesp.app.br
    - BEHIND_HTTPS_PROXY=True  (se usar Nginx com HTTPS na frente)
-   Guarde: Ctrl+O, Enter, Ctrl+X
+   Salvar: Ctrl+O, Enter, Ctrl+X
 
 4) Subir PostgreSQL + aplicação
    docker compose --profile full up -d --build
@@ -43,7 +43,7 @@ Branch: main
    http://SEU_IP:8000
 
 7) Nginx + HTTPS (subdomínio)
-   - DNS: registo A "nutriamor" → IP da VPS
+   - DNS: registro A "nutriamor" → IP da VPS
    - sudo apt install -y nginx
    - sudo cp deploy/nginx-nutriamor-subdominio.conf /etc/nginx/sites-available/nutriamor
    - sudo ln -sf /etc/nginx/sites-available/nutriamor /etc/nginx/sites-enabled/

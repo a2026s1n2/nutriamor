@@ -11,7 +11,7 @@ NutriAmor-Web — como executar
 
 2) Configurar .env (copiar de .env.example):
    - Para testar sem PostgreSQL: USE_SQLITE=True
-   - Para PostgreSQL: USE_SQLITE=False e DATABASE_URL=postgres://utilizador:senha@host:5432/nutriamor
+   - Para PostgreSQL: USE_SQLITE=False e DATABASE_URL=postgres://usuario:senha@host:5432/nutriamor
 
 3) Migrações e dados iniciais:
    python manage.py migrate
@@ -24,30 +24,30 @@ NutriAmor-Web — como executar
 
 5) SQL de referência (revisão DBA): database/schema.sql
 
-6) Importar NF-e por XML: menu «Importar XML NF-e» ou Estoque → DANFEs → «Importar XML». Os dados ficam em cache 1 hora (revisão antes de gravar).
+6) Importar NF-e por XML: menu «Importar XML NF-e» ou Estoque → DANFEs → «Importar XML». Os dados ficam em cache por 1 hora (revisar antes de salvar).
 
-Perfil CONSULTA: apenas leitura nas telas de criação/edição (mixin EscritaNecessariaMixin).
+Perfil CONSULTA: somente leitura nas telas de criação/edição (mixin EscritaNecessariaMixin).
 
 7) Docker (PostgreSQL + Gunicorn)
    - Copie .env.docker.example para .env e defina SECRET_KEY e ALLOWED_HOSTS (domínio ou IP do servidor).
    - Stack completo: docker compose --profile full up --build
-   - Só base de dados (Django na máquina): docker compose up -d db
-   - Primeira vez no contentor: docker compose --profile full run --rm web python manage.py seed_base
+   - Só banco de dados (Django na máquina): docker compose up -d db
+   - Primeira vez no container: docker compose --profile full run --rm web python manage.py seed_base
    - Administrador com e-mail do domínio: docker compose --profile full run --rm web python manage.py ensure_admin --email admin@nutriamor.cienciadedadosunivesp.app.br --password 'SENHA_FORTE'
-   - Superutilizador (interativo): docker compose --profile full run --rm web python manage.py createsuperuser
+   - Superusuário (interativo): docker compose --profile full run --rm web python manage.py createsuperuser
 
 8) VPS Ubuntu 24.04 — clone e deploy (passo a passo completo)
    - Repositório: git clone https://github.com/a2026s1n2/nutriamor.git
-   - Ver ficheiro: deploy/VPS-instalar-desde-github.txt
+   - Ver arquivo: deploy/VPS-instalar-desde-github.txt
    - Resumo: clonar em /opt/nutriamor-web, bash deploy/install-docker-ubuntu24.sh, .env, docker compose --profile full up -d --build
    - Testar: http://SEU_IP:8000
    - Firewall (opcional): sudo ufw allow OpenSSH && sudo ufw allow 8000/tcp && sudo ufw enable
-   - Produção: Nginx/Caddy na porta 443; não exponha root por palavra-passe.
+   - Produção: Nginx/Caddy na porta 443; não exponha acesso root por senha.
 
 9) Domínio e subdomínio (ex.: nutriamor.cienciadedadosunivesp.app.br)
    DNS (no painel do domínio cienciadedadosunivesp.app.br):
-   - Tipo A, nome "nutriamor", valor = IP público da VPS (ou CNAME se o registador permitir apontar para o host raiz).
-   - Propagação pode levar de minutos a algumas horas.
+   - Tipo A, nome "nutriamor", valor = IP público da VPS (ou CNAME se o registrador permitir apontar para o host raiz).
+   - A propagação pode levar de minutos a algumas horas.
    No servidor Ubuntu:
    - sudo apt install -y nginx
    - Copie deploy/nginx-nutriamor-subdominio.conf para /etc/nginx/sites-available/nutriamor e ajuste server_name se necessário.
@@ -61,4 +61,4 @@ Perfil CONSULTA: apenas leitura nas telas de criação/edição (mixin EscritaNe
    - CSRF_TRUSTED_ORIGINS=https://nutriamor.cienciadedadosunivesp.app.br
    - BEHIND_HTTPS_PROXY=True
    - Reinicie: docker compose --profile full up -d --build
-   Aceda: https://nutriamor.cienciadedadosunivesp.app.br
+   Acesse: https://nutriamor.cienciadedadosunivesp.app.br

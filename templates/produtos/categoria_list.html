@@ -24,7 +24,7 @@
           {% if user.pode_escrita %}<td><a href="{% url 'produtos:categoria_update' c.pk %}">Editar</a></td>{% endif %}
         </tr>
         {% empty %}
-        <tr><td colspan="3" class="muted">Sem registos.</td></tr>
+        <tr><td colspan="3" class="muted">Sem registros.</td></tr>
         {% endfor %}
       </tbody>
     </table>

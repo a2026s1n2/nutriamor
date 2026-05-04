@@ -8,7 +8,7 @@
       <span class="auth-brand__text">NutriAmor</span>
     </div>
     <h1>Entrar</h1>
-    <p class="muted">Utilize o e-mail e a palavra-passe da sua conta.</p>
+    <p class="muted">Use o e-mail e a senha da sua conta.</p>
     <form method="post" class="stack-form" action="{% url 'core:login' %}">
       {% csrf_token %}
       {% if request.GET.next %}

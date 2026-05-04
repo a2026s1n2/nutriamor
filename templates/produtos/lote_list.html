@@ -4,7 +4,7 @@
 <section class="page-head">
   <div>
     <h1>Lotes</h1>
-    <p class="page-head__sub">Rastreio por validade e fornecedor — saldo atualizado por movimentações.</p>
+    <p class="page-head__sub">Rastreamento por validade e fornecedor — saldo atualizado por movimentações.</p>
   </div>
   {% if user.pode_escrita %}
   <a class="btn btn-primary" href="{% url 'produtos:lote_create' %}">+ Novo lote</a>
@@ -25,7 +25,7 @@
             <td>{{ l.data_validade|default:"—" }}</td>
           </tr>
           {% empty %}
-          <tr><td colspan="5" class="muted">Sem registos.</td></tr>
+          <tr><td colspan="5" class="muted">Sem registros.</td></tr>
           {% endfor %}
         </tbody>
       </table>

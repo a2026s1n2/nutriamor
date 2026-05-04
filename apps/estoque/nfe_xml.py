@@ -1,6 +1,6 @@
 """
 Leitura mínima de XML de NF-e (modelo comum 4.00) para importação.
-Não substitui validação fiscal — apenas extrai dados para o fluxo de stock.
+Não substitui validação fiscal — apenas extrai dados para o fluxo de estoque.
 """
 from __future__ import annotations
 
@@ -86,7 +86,7 @@ def extrair_chave_44(inf_nfe: ET.Element) -> str:
 
 def parse_nfe_xml_bytes(content: bytes) -> NfeCabecalhoParsed:
     if not content or len(content) > 3_500_000:
-        raise NfeXmlErro("Ficheiro XML vazio ou demasiado grande (máx. ~3,5 MB).")
+        raise NfeXmlErro("Arquivo XML vazio ou muito grande (máx. ~3,5 MB).")
 
     try:
         root = ET.fromstring(content)
