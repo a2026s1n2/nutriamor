@@ -36,10 +36,10 @@
         <a href="{% url 'produtos:categoria_list' %}" class="side-nav__link{% if ns == 'produtos' and 'categoria' in nm %} is-active{% endif %}">
           <span class="side-nav__ico" aria-hidden="true">◇</span> Categorias
         </a>
-        <a href="{% url 'produtos:tipo_fornecedor_list' %}" class="side-nav__link{% if ns == 'produtos' and (nm == 'tipo_fornecedor_list' or nm == 'tipo_fornecedor_create') %} is-active{% endif %}">
+        <a href="{% url 'produtos:tipo_fornecedor_list' %}" class="side-nav__link{% if ns == 'produtos' and nm == 'tipo_fornecedor_list' or ns == 'produtos' and nm == 'tipo_fornecedor_create' %} is-active{% endif %}">
           <span class="side-nav__ico" aria-hidden="true">◎</span> Tipos fornecedor
         </a>
-        <a href="{% url 'produtos:fornecedor_list' %}" class="side-nav__link{% if ns == 'produtos' and (nm == 'fornecedor_list' or nm == 'fornecedor_create' or nm == 'fornecedor_update') %} is-active{% endif %}">
+        <a href="{% url 'produtos:fornecedor_list' %}" class="side-nav__link{% if ns == 'produtos' and nm == 'fornecedor_list' or ns == 'produtos' and nm == 'fornecedor_create' or ns == 'produtos' and nm == 'fornecedor_update' %} is-active{% endif %}">
           <span class="side-nav__ico" aria-hidden="true">⬡</span> Fornecedores
         </a>
         <a href="{% url 'produtos:produto_list' %}" class="side-nav__link{% if ns == 'produtos' and 'produto' in nm %} is-active{% endif %}">
