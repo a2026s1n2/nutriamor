@@ -9,7 +9,7 @@ urlpatterns = [
     path("", views.DashboardView.as_view(), name="dashboard"),
     path(
         "login/",
-        auth_views.LoginView.as_view(template_name="registration/login.html"),
+        views.LoginRedirectView.as_view(),
         name="login",
     ),
     path(

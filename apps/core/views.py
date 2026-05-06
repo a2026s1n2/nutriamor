@@ -2,6 +2,7 @@ from datetime import timedelta
 from decimal import Decimal
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.db.models import DecimalField, Sum, Value
 from django.db.models.functions import Coalesce
 from django.utils import timezone
@@ -91,3 +92,19 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         ctx["abaixo_minimo"] = abaixo[:10]
         ctx["data_label"] = hoje.strftime("%d/%m/%Y")
         return ctx
+
+
+class LoginRedirectView(TemplateView):
+    """
+    Página de login.
+
+    Se o usuário já estiver autenticado, redireciona para o Painel para evitar
+    mostrar o formulário de login com a sidebar ainda ativa.
+    """
+
+    template_name = "registration/login.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("core:dashboard")
+        return super().dispatch(request, *args, **kwargs)
